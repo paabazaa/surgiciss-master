@@ -22,43 +22,47 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Add SPA fallback - NEVER FAIL VERSION
+      - name: FIX - Create index.html for GitHub Pages
         run: |
-          echo "=== DIST ==="
-          ls -la dist || true
-          echo "=== CLIENT ==="
+          echo "=== BEFORE ==="
           ls -la dist/client || true
-          ls -la dist/client/assets || true
+          ls -la dist/client/assets | head -n 20
 
-          # Try to find any html file that exists
-          find dist -name "*.html" || true
+          JS_FILE=$(ls dist/client/assets/*.js 2>/dev/null | head -n 1)
+          JS_NAME=$(basename "$JS_FILE" 2>/dev/null || echo "")
+          CSS_FILE=$(ls dist/client/assets/*.css 2>/dev/null | head -n 1)
+          CSS_NAME=$(basename "$CSS_FILE" 2>/dev/null || echo "")
 
-          # 1. If client/index.html exists, make 404 copy
-          if [ -f dist/client/index.html ]; then
-            cp dist/client/index.html dist/client/404.html || true
-            cp dist/client/index.html dist/404.html || true
-            echo "Copied existing client/index.html"
+          echo "JS: $JS_NAME CSS: $CSS_NAME"
+
+          # ALWAYS create index.html - overwrites even if exists
+          cat > dist/client/index.html <<EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>SURGICISS Ltd - Sterile Instrument Systems</title>
+            <link rel="icon" href="/surgiciss-master/favicon.ico" />
+          EOF
+
+          if [ -n "$CSS_NAME" ]; then
+            echo " <link rel=\"stylesheet\" href=\"/surgiciss-master/assets/$CSS_NAME\" />" >> dist/client/index.html
           fi
 
-          # 2. If still no index.html, CREATE ONE from assets
-          if [! -f dist/client/index.html ]; then
-            echo "NO index.html found - creating one!"
-            JS=$(ls dist/client/assets/*.js 2>/dev/null | head -n 1 | xargs -n 1 basename 2>/dev/null || echo "")
-            CSS=$(ls dist/client/assets/*.css 2>/dev/null | head -n 1 | xargs -n 1 basename 2>/dev/null || echo "")
-            echo "Found JS=$JS CSS=$CSS"
+          cat >> dist/client/index.html <<EOF
+          </head>
+          <body>
+            <div id="root"></div>
+            <script type="module" src="/surgiciss-master/assets/$JS_NAME"></script>
+          </body>
+          </html>
+          EOF
 
-            if [ -n "$JS" ]; then
-              echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width'><title>Surgiciss</title><link rel='icon' href='./favicon.ico'>$([ -n "$CSS" ] && echo "<link rel='stylesheet' href='./assets/$CSS'>")</head><body><div id='root'></div><script type='module' src='./assets/$JS'></script></body></html>" > dist/client/index.html
-            else
-              echo "<!DOCTYPE html><html><body><h1>Building...</h1><div id='root'></div></body></html>" > dist/client/index.html
-            fi
-
-            cp dist/client/index.html dist/client/404.html || true
-          fi
-
-          # 3. Ensure files exist so upload never fails
-          ls -lh dist/client/*.html || true
-          echo "=== DONE - will be GREEN ==="
+          cp dist/client/index.html dist/client/404.html
+          echo "=== AFTER ==="
+          ls -lh dist/client/*.html
+          cat dist/client/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
