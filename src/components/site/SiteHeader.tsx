@@ -47,7 +47,7 @@ export function SiteHeader() {
         <img
   src={`${import.meta.env.BASE_URL}logo.png`}
   alt="SURGICISS"
-  className="h-[72px] md:h-[88px] w-auto object-contain brightness-100"
+  className="h-[56px] md:h-[88px] w-auto object-contain brightness-100"
   width="300"
   height="72"
 />
