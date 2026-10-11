@@ -49,7 +49,7 @@ export function SiteHeader() {
   alt="SURGICISS"
   className="h-[56px] md:h-[72px] w-auto object-contain brightness-100"
   width="300"
-  height="88"
+  height="72"
 />
           <span className="leading-tight">
             <span className="block text-lg font-bold tracking-tight text-secondary">SURGICISS</span>
