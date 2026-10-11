@@ -1,25 +1,14 @@
-import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react"
-import tsconfigPaths from "vite-tsconfig-paths"
-import tailwindcss from "@tailwindcss/vite"
-import { tanstackStart } from "@tanstack/react-start/plugin/vite"
+import { defineConfig } from 'vite'
+import tsConfigPaths from 'vite-tsconfig-paths'
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 
 export default defineConfig({
-  base: "/surgiciss-master/",
+  base: '/surgiciss-master/',
   plugins: [
-    tailwindcss(),
+    tsConfigPaths({ projects: ['./tsconfig.json'] }),
     tanstackStart({
-      spa: {
-        enabled: true,
-      },
-      prerender: {
-        enabled: true,
-        crawlLinks: true,
-        autoSubfolderIndex: true,
-        failOnError: false,
-      },
+      prerender: { crawlLinks: true },
+      spa: { enabled: true },
     }),
-    react(),
-    tsconfigPaths(),
   ],
 })
