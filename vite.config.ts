@@ -16,5 +16,4 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
   ],
-  base: "/surgiciss-master/",
 })
