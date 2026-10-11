@@ -22,36 +22,14 @@ jobs:
       - run: npm run build
       - name: Prepare site folder
         run: |
-          echo "=== listing ==="
-          ls -la
-          ls -la dist 2>&1 | head -30
-          ls -la dist/client 2>&1 | head -30
-          ls -la.output/public 2>&1 | head -30
-
           rm -rf site
           mkdir site
-
-          if [ -d ".output/public" ]; then
-            echo "Using.output/public"
-            cp -r.output/public/* site/
-          elif [ -d "dist/client" ] && [ -f "dist/client/index.html" ]; then
-            echo "Using dist/client"
-            cp -r dist/client/* site/
-          elif [ -d "dist" ] && [ -f "dist/index.html" ]; then
-            echo "Using dist"
-            cp -r dist/* site/
-          else
-            echo "No index found, searching..."
-            find. -name "index.html" | head -20
-            exit 1
-          fi
-
-          # GitHub Pages needs 404.html for SPA
-          if [! -f "site/404.html" ]; then
-            cp site/index.html site/404.html
-          fi
-
-          ls -lh site/
+          echo "Copying dist/client to site"
+          cp -r dist/client/* site/
+          echo "Fixing _shell.html -> index.html"
+          cp site/_shell.html site/index.html
+          cp site/_shell.html site/404.html
+          ls -lh site/ | head -20
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
