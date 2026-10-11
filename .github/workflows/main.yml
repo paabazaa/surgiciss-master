@@ -20,15 +20,14 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
-      - name: Show what was built
+      - name: Show build output
         run: |
-          ls -la dist 2>&1 | head -30
-          ls -la.output/public 2>&1 | head -30
+          ls -la dist 2>&1 | head -20
+          ls -la.output/public 2>&1 | head -20
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path:.output/public
-
   deploy:
     environment:
       name: github-pages
