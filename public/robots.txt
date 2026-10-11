@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://surgiciss-clone-master.lovable.app/sitemap.xml
+Sitemap: https://paabazaa.github.io/surgiciss-master/sitemap.xml
