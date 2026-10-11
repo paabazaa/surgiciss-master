@@ -47,9 +47,9 @@ export function SiteHeader() {
         <img
   src={`${import.meta.env.BASE_URL}logo.png`}
   alt="SURGICISS"
-  className="h-[56px] md:h-[88px] w-auto object-contain brightness-100"
+  className="h-[56px] md:h-[72px] w-auto object-contain brightness-100"
   width="300"
-  height="72"
+  height="88"
 />
           <span className="leading-tight">
             <span className="block text-lg font-bold tracking-tight text-secondary">SURGICISS</span>
