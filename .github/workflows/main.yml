@@ -19,10 +19,24 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
+      - name: List what was built - DEBUG
+        run: |
+          echo "--- root ---"
+          ls -la
+          echo "--- dist ---"
+          ls -la dist || echo "no dist"
+          echo "--- dist/client ---"
+          ls -la dist/client || echo "no dist/client"
+          echo "---.output ---"
+          ls -la.output || echo "no.output"
+          echo "---.output/public ---"
+          ls -la.output/public || echo "no.output/public"
+          echo "--- find index.html ---"
+          find. -name "index.html" -type f | head -20
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-         path: dist/client
+          path: dist
 
   deploy:
     runs-on: ubuntu-latest
