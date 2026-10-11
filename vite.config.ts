@@ -7,11 +7,19 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 export default defineConfig({
   base: "/surgiciss-master/",
   plugins: [
-    tailwindcss(), 
+    tailwindcss(),
     tanstackStart({
-      srcDirectory: "src",
-    }), 
-    react(), 
-    tsconfigPaths()
+      spa: {
+        enabled: true,
+      },
+      prerender: {
+        enabled: true,
+        crawlLinks: true,
+        autoSubfolderIndex: true,
+        failOnError: false,
+      },
+    }),
+    react(),
+    tsconfigPaths(),
   ],
 })
