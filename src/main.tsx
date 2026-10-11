@@ -1,9 +1,25 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
+import { createRouter, RouterProvider } from "@tanstack/react-router"
+import { routeTree } from "./routeTree.gen"
+import "./styles.css"
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <div style={{padding: '40px'}}>
-    <h1>SURGICISS LTD — SITE IS LIVE 🎉</h1>
-    <p>If you see this, GitHub Pages is 100% fixed.</p>
-  </div>
-)
+const router = createRouter({
+  routeTree,
+  basepath: "/surgiciss-master/",
+})
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router
+  }
+}
+
+const rootEl = document.getElementById("root")
+if (rootEl) {
+  ReactDOM.createRoot(rootEl).render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  )
+}
