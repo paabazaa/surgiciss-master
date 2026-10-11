@@ -25,41 +25,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # cache removed - you don't have package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build
         run: npm run build
 
       - name: Add SPA fallback for GitHub Pages
         run: |
-          echo "=== dist structure ==="
+          echo "=== checking dist ==="
           ls -la dist || true
           ls -la dist/client || true
           if [ -f dist/client/index.html ]; then
-            echo "Found dist/client/index.html"
+            echo "Using dist/client/index.html"
             cp dist/client/index.html dist/client/404.html
             cp dist/client/index.html dist/404.html
-            # Keep client folder AND root 404 for SPA routing
           elif [ -f dist/index.html ]; then
-            echo "Found dist/index.html"
+            echo "Using dist/index.html"
             cp dist/index.html dist/404.html
           else
-            echo "Searching for index.html"
-            find dist -name "index.html"
-            # fallback - try to find it
             INDEX=$(find dist -name "index.html" | head -n 1)
-            if [ -n "$INDEX" ]; then
-              cp "$INDEX" dist/404.html
-              cp "$INDEX" dist/client/404.html || true
-            else
-              echo "No index.html found - failing"
-              exit 1
-            fi
+            echo "Found $INDEX"
+            cp "$INDEX" dist/404.html
+            cp "$INDEX" dist/client/404.html || true
           fi
-          echo "=== done ==="
           ls -la dist/*.html || true
 
       - name: Upload artifact
